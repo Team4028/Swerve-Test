@@ -1,10 +1,6 @@
 package com.swervedrivespecialties.exampleswerve;
 
 import com.swervedrivespecialties.exampleswerve.subsystems.DrivetrainSubsystem;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.frcteam2910.common.robot.subsystems.SubsystemManager;
@@ -15,9 +11,7 @@ public class Robot extends TimedRobot {
      * By default it runs every 5 milliseconds.
      */
     private static final double UPDATE_DT = 5.0e-3;
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tx = table.getEntry("tx");
-    public double LLXA = tx.getDouble(0);
+
     private static final OI oi = OI.getInstance();
 
     private final SubsystemManager subsystemManager = new SubsystemManager(
