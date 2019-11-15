@@ -1,11 +1,15 @@
 package com.swervedrivespecialties.exampleswerve;
 
 import com.swervedrivespecialties.exampleswerve.commands.DriveCommand;
+import com.swervedrivespecialties.exampleswerve.commands.RotateCommandLL;
 import com.swervedrivespecialties.exampleswerve.commands.ScaleDriveSpeed;
 import com.swervedrivespecialties.exampleswerve.commands.ToggleFieldOriented;
 import com.swervedrivespecialties.exampleswerve.commands.ZeroGyro;
 import com.swervedrivespecialties.exampleswerve.util.BeakXboxController;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -34,10 +38,14 @@ public class OI {
 		//==========================================================
 
 		// Driver Controller -> Command Mapping
-		_driverController.leftStick.whileActive(new DriveCommand(_driverController));	
-		_driverController.leftStick.whenReleased(new DriveCommand(_driverController));
-		_driverController.rightStick.whileActive(new DriveCommand(_driverController));	
-        _driverController.rightStick.whenReleased(new DriveCommand(_driverController));
+
+			_driverController.leftStick.whileActive(new DriveCommand(_driverController));	
+			_driverController.leftStick.whenReleased(new DriveCommand(_driverController));
+			_driverController.rightStick.whileActive(new DriveCommand(_driverController));	
+			_driverController.rightStick.whenReleased(new DriveCommand(_driverController));
+
+		//_driverController.x.whileActive(new RotateCommandLL(true));
+		//_driverController.x.whenReleased(new RotateCommandLL(false));
         
         _driverController.back.whenPressed(new ZeroGyro());
 
