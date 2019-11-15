@@ -39,13 +39,13 @@ public class OI {
 
 		// Driver Controller -> Command Mapping
 
-			_driverController.leftStick.whileActive(new DriveCommand(_driverController));	
-			_driverController.leftStick.whenReleased(new DriveCommand(_driverController));
-			_driverController.rightStick.whileActive(new DriveCommand(_driverController));	
-			_driverController.rightStick.whenReleased(new DriveCommand(_driverController));
+		_driverController.leftStick.whileActive(new DriveCommand(_driverController));	
+		_driverController.leftStick.whenReleased(new DriveCommand(_driverController));
+		_driverController.rightStick.whileActive(new DriveCommand(_driverController));	
+		_driverController.rightStick.whenReleased(new DriveCommand(_driverController));
 
-		//_driverController.x.whileActive(new RotateCommandLL(true));
-		//_driverController.x.whenReleased(new RotateCommandLL(false));
+		_driverController.x.whileActive(new RotateCommandLL(true));
+		_driverController.x.whenReleased(new RotateCommandLL(false));
         
         _driverController.back.whenPressed(new ZeroGyro());
 
