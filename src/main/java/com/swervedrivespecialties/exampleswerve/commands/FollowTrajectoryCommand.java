@@ -40,7 +40,7 @@ public class FollowTrajectoryCommand extends Command {
     @Override
     protected void end() {
         DrivetrainSubsystem.getInstance().setSnapRotation(trajectory.calculateSegment(trajectory.getDuration()).rotation.toRadians());
-        SmartDashboard.putBoolean("Running Following Trajectory", false);
+        SmartDashboard.putBoolean("Running Follow Trajectory", false);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class TestTrajectories {
         );
 
         testPath.subdivide(SUBDIVIDE_ITERATIONS);
-        testTrajectory = new Trajectory(testPath, constraints);
+        testTrajectory = new Trajectory(0.0, TEST_END_VELO, testPath, constraints);
         
     }
     public Trajectory getTestTrajectory(){

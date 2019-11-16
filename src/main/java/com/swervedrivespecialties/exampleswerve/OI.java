@@ -63,9 +63,6 @@ public class OI {
 		_driverController.start.whenPressed(new ToggleFieldOriented());
 		
 		_driverController.lb.whenPressed(new FollowTrajectoryCommand(trajectories.getTestTrajectory()));
-
-
-
     }
 
 	private Command ScaleDriveSpeed(Button a, Button b, Button y) {

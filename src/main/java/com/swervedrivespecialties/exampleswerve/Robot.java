@@ -1,9 +1,13 @@
 package com.swervedrivespecialties.exampleswerve;
 
+import com.swervedrivespecialties.exampleswerve.autonomous.TestTrajectories;
+import com.swervedrivespecialties.exampleswerve.commands.FollowTrajectoryCommand;
 import com.swervedrivespecialties.exampleswerve.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.frcteam2910.common.robot.subsystems.SubsystemManager;
 
 public class Robot extends TimedRobot {
@@ -16,6 +20,7 @@ public class Robot extends TimedRobot {
     private static final OI oi = OI.getInstance();
 
     private Command autonomousCommand;
+    private TestTrajectories trajectories = new TestTrajectories(DrivetrainSubsystem.CONSTRAINTS);
 
     private final SubsystemManager subsystemManager = new SubsystemManager(
             DrivetrainSubsystem.getInstance()
@@ -38,11 +43,25 @@ public class Robot extends TimedRobot {
     }
     @Override
     public void autonomousInit(){
-
+        if (autonomousCommand != null){
+            autonomousCommand.cancel();
+        }
+        autonomousCommand = new FollowTrajectoryCommand(trajectories.getTestTrajectory());
+        autonomousCommand.start();
     }
 
     @Override
     public void autonomousPeriodic(){
+        Scheduler.getInstance().run();
+    }
 
+    @Override
+    public void teleopInit() {
+    }
+
+    @Override
+    public void teleopPeriodic() {
+        Scheduler.getInstance().run();
+        SmartDashboard.putBoolean("Following Trajectory?", !DrivetrainSubsystem.getInstance().getFollower().getCurrentTrajectory().isEmpty());
     }
 }
