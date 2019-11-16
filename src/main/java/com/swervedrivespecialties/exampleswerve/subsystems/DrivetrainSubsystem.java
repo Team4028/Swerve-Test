@@ -11,15 +11,20 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Spark;
 
 import org.frcteam2910.common.control.CentripetalAccelerationConstraint;
+import org.frcteam2910.common.control.HolonomicMotionProfiledTrajectoryFollower;
 import org.frcteam2910.common.control.ITrajectoryConstraint;
 import org.frcteam2910.common.control.MaxAccelerationConstraint;
 import org.frcteam2910.common.control.MaxVelocityConstraint;
+import org.frcteam2910.common.control.PidConstants;
+import org.frcteam2910.common.control.PidController;
 import org.frcteam2910.common.drivers.Gyroscope;
 import org.frcteam2910.common.drivers.SwerveModule;
 import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.drivers.Mk2SwerveModule;
 import org.frcteam2910.common.robot.drivers.NavX;
 import org.frcteam2910.common.robot.subsystems.SwerveDrivetrain;
+import org.frcteam2910.common.util.DrivetrainFeedforwardConstants;
+import org.frcteam2910.common.util.HolonomicFeedforward;
 //JZ
 public class DrivetrainSubsystem extends SwerveDrivetrain {
     private static final double TRACKWIDTH = 21.5;
@@ -30,11 +35,30 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
     private static final double BACK_LEFT_ANGLE_OFFSET = -Math.toRadians(238.53);
     private static final double BACK_RIGHT_ANGLE_OFFSET = -Math.toRadians(140.59);
 
-    private static final ITrajectoryConstraint[] CONSTRAINTS = {
+    private static final PidConstants FOLLOWER_TRANSLATION_CONSTANTS = new PidConstants(0.05, 0.01, 0.0);
+    private static final PidConstants FOLLOWER_ROTATION_CONSTANTS = new PidConstants(0.2, 0.01, 0.0);
+    private static final HolonomicFeedforward FOLLOWER_FEEDFORWARD_CONSTANTS = new HolonomicFeedforward(
+            new DrivetrainFeedforwardConstants(1.0 / (14.0 * 12.0), 0.0, 0.0)
+    );
+
+    private static final PidConstants SNAP_ROTATION_CONSTANTS = new PidConstants(0.3, 0.01, 0.0);
+
+    public static final ITrajectoryConstraint[] CONSTRAINTS = {
         new MaxVelocityConstraint(12 * 12),
         new MaxAccelerationConstraint(13 * 12),
         new CentripetalAccelerationConstraint(25 * 12)
     };
+
+    private HolonomicMotionProfiledTrajectoryFollower follower = new HolonomicMotionProfiledTrajectoryFollower(
+        FOLLOWER_TRANSLATION_CONSTANTS,
+        FOLLOWER_ROTATION_CONSTANTS,
+        FOLLOWER_FEEDFORWARD_CONSTANTS
+    );
+    private PidController snapRotationController = new PidController(SNAP_ROTATION_CONSTANTS);
+    private double snapRotation = Double.NaN;
+
+    private final Object lock = new Object();
+
 
     private static final Object INSTANCE_LOCK = new Object();
     private static DrivetrainSubsystem instance;
@@ -104,6 +128,12 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
         }
     }
 
+    public void setSnapRotation(double snapRotation) {
+        synchronized (lock) {
+            this.snapRotation = snapRotation;
+        }
+    }
+
     @Override
     public SwerveModule[] getSwerveModules() {
         return swerveModules;
@@ -153,5 +183,8 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
     public double getSpeedScaling()
     {
         return speedScaling;
+    }
+    public HolonomicMotionProfiledTrajectoryFollower getFollower(){
+        return follower;
     }
 }

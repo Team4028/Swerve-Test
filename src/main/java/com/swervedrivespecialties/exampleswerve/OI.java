@@ -1,11 +1,17 @@
 package com.swervedrivespecialties.exampleswerve;
 
+import com.swervedrivespecialties.exampleswerve.autonomous.AutonomousTrajectories;
+import com.swervedrivespecialties.exampleswerve.autonomous.TestTrajectories;
 import com.swervedrivespecialties.exampleswerve.commands.DriveCommand;
+import com.swervedrivespecialties.exampleswerve.commands.FollowTrajectoryCommand;
 import com.swervedrivespecialties.exampleswerve.commands.RotateCommandLL;
 import com.swervedrivespecialties.exampleswerve.commands.ScaleDriveSpeed;
 import com.swervedrivespecialties.exampleswerve.commands.ToggleFieldOriented;
 import com.swervedrivespecialties.exampleswerve.commands.ZeroGyro;
+import com.swervedrivespecialties.exampleswerve.subsystems.DrivetrainSubsystem;
 import com.swervedrivespecialties.exampleswerve.util.BeakXboxController;
+
+import org.frcteam2910.common.control.Trajectory;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -30,9 +36,12 @@ public class OI {
 		return _instance;
 	}
 
+	private Trajectory trajectory;
+
 	// private constructor for singleton pattern
 	private OI() 	
 	{	
+		trajectory = TestTrajectories(DrivetrainSubsystem.CONSTRAINTS);
 		// =========== Driver ======================================
 		_driverController = new BeakXboxController(0);
 		//==========================================================
@@ -49,7 +58,9 @@ public class OI {
         
         _driverController.back.whenPressed(new ZeroGyro());
 
-        _driverController.start.whenPressed(new ToggleFieldOriented());
+		_driverController.start.whenPressed(new ToggleFieldOriented());
+		
+		_driverController.lb.whenPressed(new FollowTrajectoryCommand(trajectory));
 
 
 

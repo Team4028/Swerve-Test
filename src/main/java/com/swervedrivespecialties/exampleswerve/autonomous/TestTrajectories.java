@@ -17,12 +17,12 @@ import org.frcteam2910.common.math.Vector2;
 /**
  * Add your docs here.
  */
-public class AutonomousTrajectories {
+public class TestTrajectories {
 
     private static final Rotation2 TEST_PATH_ROTATION = Rotation2.fromDegrees(90.0);
     private static final Rotation2 TEST_PATH_START_ROTATION  = Rotation2.fromDegrees(0);
 
-    private AutonomousTrajectories(ITrajectoryConstraint... constraints){
+    public TestTrajectories(ITrajectoryConstraint... constraints){
         Path testPath = new Path(TEST_PATH_START_ROTATION);
         testPath.addSegment(
             new PathLineSegment(
