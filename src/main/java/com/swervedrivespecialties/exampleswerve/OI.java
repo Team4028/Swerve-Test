@@ -1,6 +1,5 @@
 package com.swervedrivespecialties.exampleswerve;
 
-import com.swervedrivespecialties.exampleswerve.autonomous.AutonomousTrajectories;
 import com.swervedrivespecialties.exampleswerve.autonomous.TestTrajectories;
 import com.swervedrivespecialties.exampleswerve.commands.DriveCommand;
 import com.swervedrivespecialties.exampleswerve.commands.FollowTrajectoryCommand;
@@ -26,6 +25,7 @@ public class OI {
 	private BeakXboxController _driverController;
 	private BeakXboxController _operatorController;
 	private BeakXboxController _engineerController;
+	private DrivetrainSubsystem _drivetrainSubsystem;
 
 	// =====================================================================================
 	// Define Singleton Pattern
@@ -36,12 +36,14 @@ public class OI {
 		return _instance;
 	}
 
-	private Trajectory trajectory;
+	private static TestTrajectories trajectories;
 
 	// private constructor for singleton pattern
 	private OI() 	
 	{	
-		trajectory = TestTrajectories(DrivetrainSubsystem.CONSTRAINTS);
+		_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
+		trajectories = new TestTrajectories(_drivetrainSubsystem.CONSTRAINTS);
+
 		// =========== Driver ======================================
 		_driverController = new BeakXboxController(0);
 		//==========================================================
@@ -60,7 +62,7 @@ public class OI {
 
 		_driverController.start.whenPressed(new ToggleFieldOriented());
 		
-		_driverController.lb.whenPressed(new FollowTrajectoryCommand(trajectory));
+		_driverController.lb.whenPressed(new FollowTrajectoryCommand(trajectories.getTestTrajectory()));
 
 
 

@@ -11,6 +11,7 @@ import org.frcteam2910.common.control.ITrajectoryConstraint;
 import org.frcteam2910.common.control.Path;
 import org.frcteam2910.common.control.PathArcSegment;
 import org.frcteam2910.common.control.PathLineSegment;
+import org.frcteam2910.common.control.Trajectory;
 import org.frcteam2910.common.math.Rotation2;
 import org.frcteam2910.common.math.Vector2;
 
@@ -19,8 +20,11 @@ import org.frcteam2910.common.math.Vector2;
  */
 public class TestTrajectories {
 
+    private final Trajectory testTrajectory;
+    private static final double TEST_END_VELO = 7.5 * 12;
     private static final Rotation2 TEST_PATH_ROTATION = Rotation2.fromDegrees(90.0);
     private static final Rotation2 TEST_PATH_START_ROTATION  = Rotation2.fromDegrees(0);
+    public static final int SUBDIVIDE_ITERATIONS = 8;
 
     public TestTrajectories(ITrajectoryConstraint... constraints){
         Path testPath = new Path(TEST_PATH_START_ROTATION);
@@ -39,5 +43,11 @@ public class TestTrajectories {
             TEST_PATH_ROTATION
         );
 
+        testPath.subdivide(SUBDIVIDE_ITERATIONS);
+        testTrajectory = new Trajectory(testPath, constraints);
+        
+    }
+    public Trajectory getTestTrajectory(){
+        return testTrajectory;
     }
 }
