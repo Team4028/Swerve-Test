@@ -9,6 +9,11 @@ import com.swervedrivespecialties.exampleswerve.util.BeakXboxController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Spark;
+
+import org.frcteam2910.common.control.CentripetalAccelerationConstraint;
+import org.frcteam2910.common.control.ITrajectoryConstraint;
+import org.frcteam2910.common.control.MaxAccelerationConstraint;
+import org.frcteam2910.common.control.MaxVelocityConstraint;
 import org.frcteam2910.common.drivers.Gyroscope;
 import org.frcteam2910.common.drivers.SwerveModule;
 import org.frcteam2910.common.math.Vector2;
@@ -24,6 +29,12 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
     private static final double FRONT_RIGHT_ANGLE_OFFSET = -Math.toRadians(359.11);
     private static final double BACK_LEFT_ANGLE_OFFSET = -Math.toRadians(238.53);
     private static final double BACK_RIGHT_ANGLE_OFFSET = -Math.toRadians(140.59);
+
+    private static final ITrajectoryConstraint[] CONSTRAINTS = {
+        new MaxVelocityConstraint(12 * 12),
+        new MaxAccelerationConstraint(13 * 12),
+        new CentripetalAccelerationConstraint(25 * 12)
+    };
 
     private static final Object INSTANCE_LOCK = new Object();
     private static DrivetrainSubsystem instance;

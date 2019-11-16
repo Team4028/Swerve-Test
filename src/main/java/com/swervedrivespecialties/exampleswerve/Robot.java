@@ -2,6 +2,7 @@ package com.swervedrivespecialties.exampleswerve;
 
 import com.swervedrivespecialties.exampleswerve.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.frcteam2910.common.robot.subsystems.SubsystemManager;
 
@@ -13,6 +14,8 @@ public class Robot extends TimedRobot {
     private static final double UPDATE_DT = 5.0e-3;
 
     private static final OI oi = OI.getInstance();
+
+    private Command autonomousCommand;
 
     private final SubsystemManager subsystemManager = new SubsystemManager(
             DrivetrainSubsystem.getInstance()
@@ -32,5 +35,14 @@ public class Robot extends TimedRobot {
         subsystemManager.outputToSmartDashboard();
 
         Scheduler.getInstance().run();
+    }
+    @Override
+    public void autonomousInit(){
+
+    }
+
+    @Override
+    public void autonomousPeriodic(){
+
     }
 }

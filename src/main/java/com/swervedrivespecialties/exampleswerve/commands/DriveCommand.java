@@ -46,7 +46,7 @@ public class DriveCommand extends Command
         }
         else if(_driverController.y.get())
         {
-            _drive.setSpeedScaling(0.75/.75);//hehe
+            _drive.setSpeedScaling(1);//hehe
         }
         if(_driverController.x.get()){
             useLL = !useLL;
