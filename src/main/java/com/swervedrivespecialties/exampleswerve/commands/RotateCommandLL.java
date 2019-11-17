@@ -19,9 +19,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RotateCommandLL extends Command {
 
   DrivetrainSubsystem _drive = DrivetrainSubsystem.getInstance();
-  private double _theta;
-  private double _rotateCommand;
+  private double _theta, _rotateCommand;
   private boolean _run;
+  private double p = 0.01;
+  private double ff = 0.11;
 
   private NetworkTable nt = NetworkTableInstance.getDefault().getTable("limelight");
 	private NetworkTableEntry tx = nt.getEntry("tx");
@@ -43,7 +44,7 @@ public class RotateCommandLL extends Command {
     _theta = tx.getDouble(0);
 
     if(Math.abs(_theta) > 0.5){
-    _rotateCommand = -Math.copySign(Math.pow(Math.copySign(0.11, _theta) + (0.01 * _theta), 2), _theta);
+    _rotateCommand = -Math.copySign(Math.pow(Math.copySign(ff, _theta) + (p * _theta), 2), _theta);
     }
     else{
       _rotateCommand = 0;
