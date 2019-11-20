@@ -1,5 +1,7 @@
 package com.swervedrivespecialties.exampleswerve.subsystems;
 
+import java.util.Optional;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.swervedrivespecialties.exampleswerve.RobotMap;
@@ -17,13 +19,16 @@ import org.frcteam2910.common.control.MaxAccelerationConstraint;
 import org.frcteam2910.common.control.MaxVelocityConstraint;
 import org.frcteam2910.common.control.PidConstants;
 import org.frcteam2910.common.control.PidController;
+import org.frcteam2910.common.control.Trajectory;
 import org.frcteam2910.common.drivers.Gyroscope;
 import org.frcteam2910.common.drivers.SwerveModule;
+import org.frcteam2910.common.math.RigidTransform2;
 import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.drivers.Mk2SwerveModule;
 import org.frcteam2910.common.robot.drivers.NavX;
 import org.frcteam2910.common.robot.subsystems.SwerveDrivetrain;
 import org.frcteam2910.common.util.DrivetrainFeedforwardConstants;
+import org.frcteam2910.common.util.HolonomicDriveSignal;
 import org.frcteam2910.common.util.HolonomicFeedforward;
 //JZ
 public class DrivetrainSubsystem extends SwerveDrivetrain {
@@ -58,6 +63,9 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
     private double snapRotation = Double.NaN;
 
     private final Object lock = new Object();
+    private double lastTimestamp = 0;
+    private HolonomicDriveSignal signal = new HolonomicDriveSignal(Vector2.ZERO, 0.0, false);
+    private Trajectory.Segment segment = null;
 
 
     private static final Object INSTANCE_LOCK = new Object();
@@ -128,9 +136,62 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
         }
     }
 
+    @Override
+    public synchronized void updateKinematics(double timestamp) {
+        super.updateKinematics(timestamp);
+
+        double dt = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+
+        double localSnapRotation;
+        synchronized (lock) {
+            localSnapRotation = snapRotation;
+        }
+        RigidTransform2 currentPose = new RigidTransform2(
+                getKinematicPosition(),
+                getGyroscope().getAngle()
+        );
+
+        Optional<HolonomicDriveSignal> optSignal = follower.update(currentPose, getKinematicVelocity(),
+                getGyroscope().getRate(), timestamp, dt);
+        HolonomicDriveSignal localSignal;
+
+        if (optSignal.isPresent()) {
+            localSignal = optSignal.get();
+
+            synchronized (lock) {
+                segment = follower.getLastSegment();
+            }
+        } else {
+            synchronized (lock) {
+                localSignal = this.signal;
+            }
+        }
+
+        if (Math.abs(localSignal.getRotation()) < 0.1 && Double.isFinite(localSnapRotation)) {
+            snapRotationController.setSetpoint(localSnapRotation);
+
+            localSignal = new HolonomicDriveSignal(localSignal.getTranslation(),
+                    snapRotationController.calculate(getGyroscope().getAngle().toRadians(), dt),
+                    localSignal.isFieldOriented());
+        } else {
+            synchronized (lock) {
+                snapRotation = Double.NaN;
+            }
+        }
+
+        super.holonomicDrive(localSignal.getTranslation(), localSignal.getRotation(), localSignal.isFieldOriented());
+    }
+
     public void setSnapRotation(double snapRotation) {
         synchronized (lock) {
             this.snapRotation = snapRotation;
+        }
+    }
+    @Override
+    public void holonomicDrive(Vector2 translation, double rotation, boolean fieldOriented) {
+        synchronized (lock) {
+            this.signal = new HolonomicDriveSignal(translation, rotation, fieldOriented);
         }
     }
 
