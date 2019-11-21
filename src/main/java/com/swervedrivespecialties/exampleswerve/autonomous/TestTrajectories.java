@@ -21,8 +21,8 @@ import org.frcteam2910.common.math.Vector2;
 public class TestTrajectories {
 
     private final Trajectory testTrajectory;
-    private static final double TEST_END_VELO = 7.5 * 12;
-    private static final Rotation2 TEST_PATH_ROTATION = Rotation2.fromDegrees(90.0);
+    private static final double TEST_END_VELO = 3 * 12;  //2910=7.5
+    private static final Rotation2 TEST_PATH_ROTATION = Rotation2.fromDegrees(-90.0);
     private static final Rotation2 TEST_PATH_START_ROTATION  = Rotation2.ZERO;
     public static final int SUBDIVIDE_ITERATIONS = 8;
 
@@ -31,14 +31,14 @@ public class TestTrajectories {
         testPath.addSegment(
             new PathLineSegment(
                 new Vector2(0, 0),
-                new Vector2(0, 48)
+                new Vector2(24, 0)
             )
         );
         testPath.addSegment(
             new PathArcSegment(
-                new Vector2(0, 48),
-                new Vector2(36, 84),
-                new Vector2(36, 48)
+                new Vector2(24, 0),
+                new Vector2(72, -48),
+                new Vector2(24, -48)
             ),
             TEST_PATH_ROTATION
         );

@@ -48,8 +48,10 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
 
     private static final PidConstants SNAP_ROTATION_CONSTANTS = new PidConstants(0.3, 0.01, 0.0);
 
+    private static int MAX_VELOCITY = 6*12; //2910=12
+
     public static final ITrajectoryConstraint[] CONSTRAINTS = {
-        new MaxVelocityConstraint(12 * 12),
+        new MaxVelocityConstraint(MAX_VELOCITY),
         new MaxAccelerationConstraint(13 * 12),
         new CentripetalAccelerationConstraint(25 * 12)
     };
