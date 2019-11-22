@@ -3,9 +3,11 @@ package com.swervedrivespecialties.exampleswerve;
 import com.swervedrivespecialties.exampleswerve.autonomous.TestTrajectories;
 import com.swervedrivespecialties.exampleswerve.commands.DriveCommand;
 import com.swervedrivespecialties.exampleswerve.commands.FollowTrajectoryCommand;
+import com.swervedrivespecialties.exampleswerve.commands.PathWithLL;
 import com.swervedrivespecialties.exampleswerve.commands.RotateCommandLL;
 import com.swervedrivespecialties.exampleswerve.commands.ScaleDriveSpeed;
 import com.swervedrivespecialties.exampleswerve.commands.ToggleFieldOriented;
+import com.swervedrivespecialties.exampleswerve.commands.TranslateCommandLL;
 import com.swervedrivespecialties.exampleswerve.commands.ZeroGyro;
 import com.swervedrivespecialties.exampleswerve.subsystems.DrivetrainSubsystem;
 import com.swervedrivespecialties.exampleswerve.util.BeakXboxController;
@@ -62,7 +64,11 @@ public class OI {
 
 		_driverController.start.whenPressed(new ToggleFieldOriented());
 		
-		_driverController.lb.whenPressed(new FollowTrajectoryCommand(trajectories.getTestTrajectory()));
+		//_driverController.lb.whenPressed(new FollowTrajectoryCommand(trajectories.getTestTrajectory()));
+
+		_driverController.rb.whenPressed(new PathWithLL());
+
+		_driverController.lb.whenPressed(new TranslateCommandLL());
     }
 
 	private Command ScaleDriveSpeed(Button a, Button b, Button y) {
