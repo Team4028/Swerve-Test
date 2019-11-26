@@ -8,6 +8,9 @@ import com.swervedrivespecialties.exampleswerve.RobotMap;
 import com.swervedrivespecialties.exampleswerve.commands.DriveCommand;
 import com.swervedrivespecialties.exampleswerve.util.BeakXboxController;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Spark;
@@ -32,6 +35,14 @@ import org.frcteam2910.common.util.HolonomicDriveSignal;
 import org.frcteam2910.common.util.HolonomicFeedforward;
 //JZ
 public class DrivetrainSubsystem extends SwerveDrivetrain {
+    private NetworkTable nt = NetworkTableInstance.getDefault().getTable("limelight");
+    private NetworkTableEntry camtran = nt.getEntry("camtran");
+
+    private double gyroYaw, llYaw, alpha;
+    gyroYaw = _driveTrainSubsystem.getGyroscope().getAngle().toDegrees();
+    llYaw = camtran.getDoubleArray(defaultValArray)[3];
+    alpha = gyroYaw - llYaw;
+
     private static final double TRACKWIDTH = 21.5;
     private static final double WHEELBASE = 23.5;
 

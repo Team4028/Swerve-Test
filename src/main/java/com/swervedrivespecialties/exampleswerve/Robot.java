@@ -2,6 +2,7 @@ package com.swervedrivespecialties.exampleswerve;
 
 import com.swervedrivespecialties.exampleswerve.autonomous.TestTrajectories;
 import com.swervedrivespecialties.exampleswerve.commands.FollowTrajectoryCommand;
+import com.swervedrivespecialties.exampleswerve.commands.TranslateCommandLL;
 import com.swervedrivespecialties.exampleswerve.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -63,5 +64,6 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         SmartDashboard.putBoolean("Following Trajectory?", !DrivetrainSubsystem.getInstance().getFollower().getCurrentTrajectory().isEmpty());
+        SmartDashboard.putNumber("alpha", TranslateCommandLL.getAlpha());
     }
 }
