@@ -26,14 +26,15 @@ public class TranslateCommandLL extends Command {
   private NetworkTable nt = NetworkTableInstance.getDefault().getTable("limelight");
   private NetworkTableEntry camtran = nt.getEntry("camtran");
   
-  private double gyroYaw, llYaw, alpha, llTran;
-  private double pTrans = 0.01;
+  private double pTrans = 0.02;
   private double iTrans = 0;
   private double dTrans = 0;
-  private double pRot = 0.01;
+  private double pRot = 0.007;
   private double iRot = 0;
   private double dRot = 0;
-  private double ff = 0.07;
+  private double llX;
+  private double targetDist;
+  private int count = 0;
 
 
   private double _currentTime;
@@ -55,23 +56,30 @@ public class TranslateCommandLL extends Command {
   @Override
   protected void initialize() {
     _currentTime = Timer.getFPGATimestamp();
-
+    llX = camtran.getDoubleArray(defaultValArray)[0];
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    llTran = camtran.getDoubleArray(defaultValArray)[0];
     _localTime = Timer.getFPGATimestamp();
     _deltaTime = _localTime - _currentTime;
     _currentTime = _localTime;
-    gyroYaw = _driveTrainSubsystem.getGyroscope().getAngle().toDegrees();
-    llYaw = camtran.getDoubleArray(defaultValArray)[3];
-    alpha = gyroYaw - llYaw;
-    Vector2 holonomicTranslationPIDCmd = Vector2.fromAngle(Rotation2.fromDegrees(alpha)).scale(_transPIDController.calculate(llTran, _deltaTime));
+    double gyroYaw = _driveTrainSubsystem.getGyroscope().getAngle().toDegrees();
+    double llYaw = camtran.getDoubleArray(defaultValArray)[4];
+    double llXOffset = nt.getEntry("tx").getDouble(0);
+    llX = camtran.getDoubleArray(defaultValArray)[0];
+    double alpha = gyroYaw - llYaw;// + llXSign;
+    if(llX != 0 || count == 4){
+      targetDist = llX;
+      count = 0;
+    }
+    else{
+      count += 1;
+    }
+    Vector2 holonomicTranslationPIDCmd = Vector2.fromAngle(Rotation2.fromDegrees(alpha)).scale(_transPIDController.calculate(targetDist, _deltaTime));
 
-    _driveTrainSubsystem.holonomicDrive(holonomicTranslationPIDCmd, _rotPIDController.calculate(llYaw, _deltaTime));
-    SmartDashboard.putNumber("alpha angle value", alpha);
+    _driveTrainSubsystem.holonomicDrive(holonomicTranslationPIDCmd, _rotPIDController.calculate(llXOffset, _deltaTime));
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -91,7 +99,4 @@ public class TranslateCommandLL extends Command {
   protected void interrupted() {
   }
 
-  private double getAlpha(){
-    return alpha;
-  }
 }

@@ -2,6 +2,7 @@ package com.swervedrivespecialties.exampleswerve;
 
 import com.swervedrivespecialties.exampleswerve.autonomous.TestTrajectories;
 import com.swervedrivespecialties.exampleswerve.commands.DriveCommand;
+import com.swervedrivespecialties.exampleswerve.commands.DriveVector;
 import com.swervedrivespecialties.exampleswerve.commands.FollowTrajectoryCommand;
 import com.swervedrivespecialties.exampleswerve.commands.PathWithLL;
 import com.swervedrivespecialties.exampleswerve.commands.RotateCommandLL;
@@ -13,6 +14,7 @@ import com.swervedrivespecialties.exampleswerve.subsystems.DrivetrainSubsystem;
 import com.swervedrivespecialties.exampleswerve.util.BeakXboxController;
 
 import org.frcteam2910.common.control.Trajectory;
+import org.frcteam2910.common.math.Vector2;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -66,9 +68,11 @@ public class OI {
 		
 		//_driverController.lb.whenPressed(new FollowTrajectoryCommand(trajectories.getTestTrajectory()));
 
-		_driverController.rb.whenPressed(new PathWithLL());
+		//_driverController.rb.whenPressed(new PathWithLL());
 
 		_driverController.lb.whenPressed(new TranslateCommandLL());
+
+		_driverController.rb.whenPressed(new DriveVector(new Vector2(48, 0), false));
     }
 
 	private Command ScaleDriveSpeed(Button a, Button b, Button y) {

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.frcteam2910.common.robot.subsystems.Drivetrain;
 import org.frcteam2910.common.robot.subsystems.SubsystemManager;
 
 public class Robot extends TimedRobot {
@@ -19,6 +20,7 @@ public class Robot extends TimedRobot {
     private static final double UPDATE_DT = 5.0e-3;
 
     private static final OI oi = OI.getInstance();
+    private static final DrivetrainSubsystem _driveTrainSubsystem = DrivetrainSubsystem.getInstance();
 
     private Command autonomousCommand;
     private TestTrajectories trajectories = new TestTrajectories(DrivetrainSubsystem.CONSTRAINTS);
@@ -64,6 +66,9 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         SmartDashboard.putBoolean("Following Trajectory?", !DrivetrainSubsystem.getInstance().getFollower().getCurrentTrajectory().isEmpty());
-        SmartDashboard.putNumber("alpha", TranslateCommandLL.getAlpha());
+        SmartDashboard.putNumber("alpha", _driveTrainSubsystem.getAlpha());
+        for (int ind = 0; ind < 6; ind++){
+            SmartDashboard.putNumber( "LLArr " + Double.toString(ind) + ": ", _driveTrainSubsystem.getLLArray()[ind]);
+        }
     }
 }

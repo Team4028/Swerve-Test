@@ -35,13 +35,6 @@ import org.frcteam2910.common.util.HolonomicDriveSignal;
 import org.frcteam2910.common.util.HolonomicFeedforward;
 //JZ
 public class DrivetrainSubsystem extends SwerveDrivetrain {
-    private NetworkTable nt = NetworkTableInstance.getDefault().getTable("limelight");
-    private NetworkTableEntry camtran = nt.getEntry("camtran");
-
-    private double gyroYaw, llYaw, alpha;
-    gyroYaw = _driveTrainSubsystem.getGyroscope().getAngle().toDegrees();
-    llYaw = camtran.getDoubleArray(defaultValArray)[3];
-    alpha = gyroYaw - llYaw;
 
     private static final double TRACKWIDTH = 21.5;
     private static final double WHEELBASE = 23.5;
@@ -90,6 +83,13 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
     private double speedScaling = 0.5;
 
     private final Gyroscope gyroscope = new NavX(SPI.Port.kMXP);
+
+    // Limelight/Pathfollowing
+    private NetworkTable nt = NetworkTableInstance.getDefault().getTable("limelight");
+    private NetworkTableEntry camtran = nt.getEntry("camtran");
+
+    private double[] defaultValArray = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    //-
 
     public DrivetrainSubsystem() {
         gyroscope.calibrate();
@@ -260,5 +260,16 @@ public class DrivetrainSubsystem extends SwerveDrivetrain {
     }
     public HolonomicMotionProfiledTrajectoryFollower getFollower(){
         return follower;
+    }
+
+    public double getAlpha(){
+        double gyroYaw = gyroscope.getAngle().toDegrees();
+        double llYaw = camtran.getDoubleArray(defaultValArray)[4];
+        double llX = camtran.getDoubleArray(defaultValArray)[0];
+        double alpha = gyroYaw - llYaw + Math.copySign(90, llX);
+        return alpha;
+      }
+    public double[] getLLArray(){
+        return camtran.getDoubleArray(defaultValArray);
     }
 }
