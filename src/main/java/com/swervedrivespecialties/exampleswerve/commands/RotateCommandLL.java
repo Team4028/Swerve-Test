@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RotateCommandLL extends Command {
 
-  DrivetrainSubsystem _drive = DrivetrainSubsystem.getInstance();
+  private DrivetrainSubsystem _drive = DrivetrainSubsystem.getInstance();
   private double _theta, _rotateCommand;
   private boolean _run;
   private double p = 0.01;

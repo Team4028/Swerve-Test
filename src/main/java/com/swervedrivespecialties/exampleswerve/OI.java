@@ -6,6 +6,7 @@ import com.swervedrivespecialties.exampleswerve.commands.DriveVector;
 import com.swervedrivespecialties.exampleswerve.commands.FollowTrajectoryCommand;
 import com.swervedrivespecialties.exampleswerve.commands.PathWithLL;
 import com.swervedrivespecialties.exampleswerve.commands.RotateCommandLL;
+import com.swervedrivespecialties.exampleswerve.commands.RotateToAngle;
 import com.swervedrivespecialties.exampleswerve.commands.ScaleDriveSpeed;
 import com.swervedrivespecialties.exampleswerve.commands.ToggleFieldOriented;
 import com.swervedrivespecialties.exampleswerve.commands.TranslateCommandLL;
@@ -73,6 +74,18 @@ public class OI {
 		_driverController.lb.whenPressed(new TranslateCommandLL());
 
 		_driverController.rb.whenPressed(new DriveVector(new Vector2(48, 0), false));
+
+		_driverController.dPad.up.whenPressed(new RotateToAngle(0));
+		_driverController.dPad.upLeft.whenPressed(new RotateToAngle(45));
+		_driverController.dPad.left.whenPressed(new RotateToAngle(90));
+		_driverController.dPad.downLeft.whenPressed(new RotateToAngle(135));
+		_driverController.dPad.down.whenPressed(new RotateToAngle(180));
+		_driverController.dPad.downRight.whenPressed(new RotateToAngle(225));
+		_driverController.dPad.right.whenPressed(new RotateToAngle(270));
+		_driverController.dPad.upRight.whenPressed(new RotateToAngle(315));
+		
+		
+
     }
 
 	private Command ScaleDriveSpeed(Button a, Button b, Button y) {
